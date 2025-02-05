@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DietPal - Personalized Nutrition Assistant</title>
+    <title>NutriGuide - Smart Diet Assistant</title>
     <style>
         :root {
             --primary: #FF6B6B;
@@ -18,14 +18,15 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Nunito', sans-serif;
         }
 
         body {
-            font-family: 'Nunito', sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
             padding: 1rem;
+            line-height: 1.6;
         }
 
         .container {
@@ -134,19 +135,34 @@
             box-shadow: 0 4px 15px rgba(255, 230, 109, 0.3);
         }
 
-        /* Animations */
-        @keyframes slideIn {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .nutrition-facts {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 0.5rem;
         }
 
-        /* Mobile Optimization */
+        .meal-time {
+            color: var(--accent);
+            font-weight: bold;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            background: var(--accent);
+            color: #333;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 1rem;
@@ -166,111 +182,11 @@
             button {
                 padding: 0.8rem 1.2rem;
             }
-
-            input, select {
-                padding: 0.8rem;
-            }
-        }
-
-        /* Decorative Elements */
-        .message::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            width: 20px;
-            height: 20px;
-            background: inherit;
-            clip-path: polygon(0 0, 100% 0, 100% 100%);
-        }
-
-        .user-message::after {
-            right: 0;
-            transform: rotate(270deg);
-        }
-
-        .bot-message::after {
-            left: 0;
-            transform: rotate(180deg);
-        }
-
-        .lifestyle-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Profile Setup -->
-        <div id="profile-setup">
-            <h2>🍏 Create Your Profile</h2>
-            <form id="profile-form">
-                <input type="number" id="age" placeholder="Age" required>
-                <input type="number" id="weight" placeholder="Weight (kg)" required>
-                <input type="number" id="height" placeholder="Height (cm)" required>
-                <select id="lifestyle" required>
-                    <option value="">Select Lifestyle 🏃</option>
-                    <option value="hosteler">🎓 Hosteler</option>
-                    <option value="corporate">💼 Corporate Worker</option>
-                    <option value="student">📚 Student</option>
-                    <option value="athlete">🏋️ Athlete</option>
-                </select>
-                <button type="submit">Start Your Journey 🚀</button>
-            </form>
-        </div>
-
-        <!-- Chat Interface -->
-        <div id="chat-interface">
-            <h2>🍴 Your Personal Diet Assistant</h2>
-            <div class="chat-box" id="chat-messages"></div>
-            <div class="input-container">
-                <input type="text" id="user-input" placeholder="Ask about your diet...">
-                <button onclick="handleUserInput()">Send 🚀</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ... (Keep previous JavaScript code same) ...
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DietPal Pro - Smart Nutrition Assistant</title>
-    <style>
-        /* Previous styles remain, with these additions */
-        .nutrition-facts {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            border-radius: 10px;
-            margin-top: 0.5rem;
-        }
-        
-        .meal-time {
-            color: var(--accent);
-            font-weight: bold;
-            margin: 1rem 0 0.5rem;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            background: var(--accent);
-            color: #333;
-            font-size: 0.8rem;
-            margin: 0.2rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Updated Profile Setup -->
         <div id="profile-setup">
             <h2>🍏 Create Your Profile</h2>
             <form id="profile-form">
@@ -298,107 +214,22 @@
             </form>
         </div>
 
-        <!-- Chat Interface remains same -->
+        <div id="chat-interface">
+            <h2>🍴 Your Personal Diet Assistant</h2>
+            <div class="chat-box" id="chat-messages"></div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Ask about your diet...">
+                <button onclick="handleUserInput()">Send 🚀</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Enhanced Profile Data Collection
-        let userProfile = {
-            dietaryRestrictions: []
-        };
+        let userProfile = {};
 
-        // Enhanced Response Database
-        const dietDatabase = {
-            hosteler: {
-                vegetarian: {
-                    breakfast: ["Poha with peanuts and curd", "Upma with vegetables", "Besan chilla"],
-                    lunch: ["Dal khichdi with salad", "Rajma rice with curd", "Vegetable pulao"],
-                    dinner: ["Rotla with bhaji", "Mix veg sabzi with roti", "Curd rice"],
-                    snacks: ["Roasted chana", "Fruit chaat", "Makhana"]
-                },
-                nonVegetarian: {
-                    breakfast: ["Egg bhurji with toast", "Chicken sandwich", "Omelette with veggies"],
-                    lunch: ["Chicken curry with rice", "Egg fried rice", "Fish curry with roti"],
-                    dinner: ["Grilled chicken salad", "Fish tawa fry with veggies", "Egg curry"],
-                    snacks: ["Boiled eggs", "Chicken soup", "Protein shake"]
-                }
-            },
-            // Similar structures for other lifestyles
-        };
-
-        // Enhanced Response Generator
-        function generateResponse(userInput) {
-            const lifestyle = userProfile.lifestyle;
-            const dietPref = userProfile.dietPreference;
-            const activityLevel = userProfile.activityLevel;
-
-            let response = '';
-            
-            if (userInput.toLowerCase().includes('breakfast')) {
-                response = getMealSuggestions('breakfast', lifestyle, dietPref);
-            } else if (userInput.toLowerCase().match(/lunch|dinner|meal plan/i)) {
-                response = generateDailyPlan(lifestyle, dietPref, activityLevel);
-            } else if (userInput.toLowerCase().includes('snack')) {
-                response = getSnackSuggestions(lifestyle, dietPref);
-            } else {
-                response = getGeneralAdvice(userInput, lifestyle, activityLevel);
-            }
-
-            setTimeout(() => addBotMessage(response), 800);
-        }
-
-        function calculateCalorieNeeds() {
-            // Harris-Benedict equation approximation
-            const bmr = 10 * userProfile.weight + 6.25 * userProfile.height - 5 * userProfile.age;
-            const activityMultipliers = {
-                sedentary: 1.2,
-                light: 1.375,
-                active: 1.55
-            };
-            return Math.round(bmr * activityMultipliers[userProfile.activityLevel]);
-        }
-
-        function generateDailyPlan() {
-            const calories = calculateCalorieNeeds();
-            const plan = `
-                📅 Daily Plan (${calories} kcal):
-                
-                🌅 Breakfast (30%):
-                ${getMealSuggestions('breakfast').join('\n')}
-                
-                ☀️ Lunch (40%):
-                ${getMealSuggestions('lunch').join('\n')}
-                
-                🌙 Dinner (30%):
-                ${getMealSuggestions('dinner').join('\n')}
-                
-                🍎 Snacks:
-                ${getSnackSuggestions().join('\n')}
-                
-                💧 Hydration: 3-4 liters water
-                ⚡ Activity: ${getActivityRecommendation()}
-            `;
-            
-            return plan.replace(/\n/g, '<br>') + addNutritionTips();
-        }
-
-        function addNutritionTips() {
-            return `
-                <div class="nutrition-facts">
-                    📌 Pro Tips:
-                    • Include 2 servings of vegetables in every meal
-                    • Choose whole grains over refined carbs
-                    • ${userProfile.activityLevel === 'active' ? 'Increase protein intake' : 'Mind portion sizes'}
-                    • Limit processed foods and sugary drinks
-                </div>
-            `;
-        }
-
-        // Update profile handling to collect new fields
         document.getElementById('profile-form').addEventListener('submit', (e) => {
             e.preventDefault();
             userProfile = {
-                ...userProfile,
                 age: document.getElementById('age').value,
                 weight: document.getElementById('weight').value,
                 height: document.getElementById('height').value,
@@ -409,16 +240,152 @@
             
             document.getElementById('profile-setup').style.display = 'none';
             document.getElementById('chat-interface').style.display = 'block';
-            const greeting = `Welcome! I've prepared personalized recommendations based on:
-                <div class="badge">Age: ${userProfile.age}</div>
-                <div class="badge">Weight: ${userProfile.weight}kg</div>
-                <div class="badge">${userProfile.lifestyle}</div>
-                <div class="badge">${userProfile.dietPreference}</div>
-                How can I assist you today?`;
-            addBotMessage(greeting);
+            showWelcomeMessage();
         });
 
-        // Add remaining helper functions from previous version
+        function showWelcomeMessage() {
+            const calories = calculateCalories();
+            const greeting = `Welcome! Based on your profile:
+                <div class="badge">${userProfile.age} years</div>
+                <div class="badge">${userProfile.weight}kg</div>
+                <div class="badge">${userProfile.lifestyle}</div>
+                <div class="badge">${userProfile.dietPreference}</div>
+                🔥 Daily Calorie Needs: ${calories}kcal
+                How can I help you today?`;
+            addBotMessage(greeting);
+        }
+
+        function calculateCalories() {
+            const bmr = 10 * userProfile.weight + 6.25 * userProfile.height - 5 * userProfile.age;
+            const activity = {
+                sedentary: 1.2,
+                light: 1.375,
+                active: 1.55
+            }[userProfile.activityLevel];
+            return Math.round(bmr * activity);
+        }
+
+        function handleUserInput() {
+            const input = document.getElementById('user-input').value.trim();
+            if (!input) return;
+
+            addUserMessage(input);
+            generateResponse(input);
+            document.getElementById('user-input').value = '';
+        }
+
+        function addUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message user-message';
+            div.textContent = text;
+            document.getElementById('chat-messages').appendChild(div);
+            div.scrollIntoView();
+        }
+
+        function addBotMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message bot-message';
+            div.innerHTML = text;
+            document.getElementById('chat-messages').appendChild(div);
+            div.scrollIntoView();
+        }
+
+        function generateResponse(input) {
+            let response = '';
+            const lowInput = input.toLowerCase();
+
+            if (lowInput.includes('breakfast')) {
+                response = getMealSuggestions('breakfast');
+            } else if (lowInput.includes('lunch')) {
+                response = getMealSuggestions('lunch');
+            } else if (lowInput.includes('dinner')) {
+                response = getMealSuggestions('dinner');
+            } else if (lowInput.includes('snack')) {
+                response = getSnackSuggestions();
+            } else if (lowInput.includes('plan')) {
+                response = generateDailyPlan();
+            } else {
+                response = getGeneralAdvice();
+            }
+
+            setTimeout(() => addBotMessage(response), 800);
+        }
+
+        function getMealSuggestions(mealType) {
+            const suggestions = {
+                hosteler: {
+                    vegetarian: {
+                        breakfast: ["Poha with peanuts", "Upma with veggies", "Besan chilla"],
+                        lunch: ["Dal khichdi + salad", "Rajma rice + curd", "Vegetable pulao"],
+                        dinner: ["Rotla with bhaji", "Mix veg sabzi + roti", "Curd rice"]
+                    },
+                    nonVegetarian: {
+                        breakfast: ["Egg bhurji + toast", "Chicken sandwich", "Omelette"],
+                        lunch: ["Chicken curry + rice", "Egg fried rice", "Fish curry + roti"],
+                        dinner: ["Grilled chicken salad", "Fish tawa fry", "Egg curry"]
+                    }
+                },
+                corporate: {
+                    vegetarian: {
+                        breakfast: ["Oatmeal + nuts", "Smoothie bowl", "Whole grain toast"],
+                        lunch: ["Quinoa salad", "Wrap with hummus", "Brown rice bowl"],
+                        dinner: ["Stir-fried tofu", "Vegetable noodles", "Soup + bread"]
+                    },
+                    nonVegetarian: {
+                        breakfast: ["Greek yogurt + honey", "Smoked salmon toast", "Protein shake"],
+                        lunch: ["Grilled chicken salad", "Tuna sandwich", "Sushi bowl"],
+                        dinner: ["Baked fish + veggies", "Lean steak + mash", "Chicken stir-fry"]
+                    }
+                }
+            };
+
+            const meals = suggestions[userProfile.lifestyle]?.[userProfile.dietPreference]?.[mealType] || 
+                        ["Fresh seasonal fruits", "Mixed nuts", "Vegetable salad"];
+            
+            return `🍽️ ${mealType.charAt(0).toUpperCase() + mealType.slice(1)} Suggestions:
+                ${meals.map(m => `• ${m}`).join('\n')}
+                <div class="nutrition-facts">
+                    💡 Tip: ${getMealTip(mealType)}
+                </div>`;
+        }
+
+        function generateDailyPlan() {
+            return `📅 Your Daily Plan:
+                <div class="meal-time">🌅 Breakfast (7-9 AM)</div>
+                ${getMealSuggestions('breakfast')}
+
+                <div class="meal-time">☀️ Lunch (12-2 PM)</div>
+                ${getMealSuggestions('lunch')}
+
+                <div class="meal-time">🌙 Dinner (7-9 PM)</div>
+                ${getMealSuggestions('dinner')}
+
+                <div class="meal-time">🍎 Snacks</div>
+                ${getSnackSuggestions()}
+
+                <div class="nutrition-facts">
+                    💧 Hydration: 3-4 liters water daily
+                    ⚡ Activity: ${getActivityRecommendation()}
+                    🕒 Meal Timing: Maintain 3-4 hour gaps
+                </div>`;
+        }
+
+        function getActivityRecommendation() {
+            return {
+                sedentary: "30-min walk + stretching",
+                light: "45-min workout 3x/week",
+                active: "1-hour exercise 5x/week + sports"
+            }[userProfile.activityLevel];
+        }
+
+        function getMealTip(mealType) {
+            const tips = {
+                breakfast: "Include protein and complex carbs",
+                lunch: "Balance all food groups",
+                dinner: "Keep it light and early"
+            };
+            return tips[mealType] || "Chew slowly and stay hydrated!";
+        }
     </script>
 </body>
 </html>
