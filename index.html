@@ -236,3 +236,189 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DietPal Pro - Smart Nutrition Assistant</title>
+    <style>
+        /* Previous styles remain, with these additions */
+        .nutrition-facts {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+        }
+        
+        .meal-time {
+            color: var(--accent);
+            font-weight: bold;
+            margin: 1rem 0 0.5rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            background: var(--accent);
+            color: #333;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Updated Profile Setup -->
+        <div id="profile-setup">
+            <h2>🍏 Create Your Profile</h2>
+            <form id="profile-form">
+                <input type="number" id="age" placeholder="Age" min="12" max="100" required>
+                <input type="number" id="weight" placeholder="Weight (kg)" min="30" max="200" required>
+                <input type="number" id="height" placeholder="Height (cm)" min="120" max="250" required>
+                <select id="lifestyle" required>
+                    <option value="">Select Lifestyle 🏃</option>
+                    <option value="hosteler">🎓 Hosteler</option>
+                    <option value="corporate">💼 Corporate Worker</option>
+                    <option value="student">📚 Student</option>
+                    <option value="athlete">🏋️ Athlete</option>
+                </select>
+                <select id="diet-preference">
+                    <option value="vegetarian">🌱 Vegetarian</option>
+                    <option value="non-vegetarian">🍗 Non-Veg</option>
+                    <option value="vegan">🥦 Vegan</option>
+                </select>
+                <select id="activity-level">
+                    <option value="sedentary">🪑 Sedentary</option>
+                    <option value="light">🚶 Light Activity</option>
+                    <option value="active">🏃 Active</option>
+                </select>
+                <button type="submit">Start Your Journey 🚀</button>
+            </form>
+        </div>
+
+        <!-- Chat Interface remains same -->
+    </div>
+
+    <script>
+        // Enhanced Profile Data Collection
+        let userProfile = {
+            dietaryRestrictions: []
+        };
+
+        // Enhanced Response Database
+        const dietDatabase = {
+            hosteler: {
+                vegetarian: {
+                    breakfast: ["Poha with peanuts and curd", "Upma with vegetables", "Besan chilla"],
+                    lunch: ["Dal khichdi with salad", "Rajma rice with curd", "Vegetable pulao"],
+                    dinner: ["Rotla with bhaji", "Mix veg sabzi with roti", "Curd rice"],
+                    snacks: ["Roasted chana", "Fruit chaat", "Makhana"]
+                },
+                nonVegetarian: {
+                    breakfast: ["Egg bhurji with toast", "Chicken sandwich", "Omelette with veggies"],
+                    lunch: ["Chicken curry with rice", "Egg fried rice", "Fish curry with roti"],
+                    dinner: ["Grilled chicken salad", "Fish tawa fry with veggies", "Egg curry"],
+                    snacks: ["Boiled eggs", "Chicken soup", "Protein shake"]
+                }
+            },
+            // Similar structures for other lifestyles
+        };
+
+        // Enhanced Response Generator
+        function generateResponse(userInput) {
+            const lifestyle = userProfile.lifestyle;
+            const dietPref = userProfile.dietPreference;
+            const activityLevel = userProfile.activityLevel;
+
+            let response = '';
+            
+            if (userInput.toLowerCase().includes('breakfast')) {
+                response = getMealSuggestions('breakfast', lifestyle, dietPref);
+            } else if (userInput.toLowerCase().match(/lunch|dinner|meal plan/i)) {
+                response = generateDailyPlan(lifestyle, dietPref, activityLevel);
+            } else if (userInput.toLowerCase().includes('snack')) {
+                response = getSnackSuggestions(lifestyle, dietPref);
+            } else {
+                response = getGeneralAdvice(userInput, lifestyle, activityLevel);
+            }
+
+            setTimeout(() => addBotMessage(response), 800);
+        }
+
+        function calculateCalorieNeeds() {
+            // Harris-Benedict equation approximation
+            const bmr = 10 * userProfile.weight + 6.25 * userProfile.height - 5 * userProfile.age;
+            const activityMultipliers = {
+                sedentary: 1.2,
+                light: 1.375,
+                active: 1.55
+            };
+            return Math.round(bmr * activityMultipliers[userProfile.activityLevel]);
+        }
+
+        function generateDailyPlan() {
+            const calories = calculateCalorieNeeds();
+            const plan = `
+                📅 Daily Plan (${calories} kcal):
+                
+                🌅 Breakfast (30%):
+                ${getMealSuggestions('breakfast').join('\n')}
+                
+                ☀️ Lunch (40%):
+                ${getMealSuggestions('lunch').join('\n')}
+                
+                🌙 Dinner (30%):
+                ${getMealSuggestions('dinner').join('\n')}
+                
+                🍎 Snacks:
+                ${getSnackSuggestions().join('\n')}
+                
+                💧 Hydration: 3-4 liters water
+                ⚡ Activity: ${getActivityRecommendation()}
+            `;
+            
+            return plan.replace(/\n/g, '<br>') + addNutritionTips();
+        }
+
+        function addNutritionTips() {
+            return `
+                <div class="nutrition-facts">
+                    📌 Pro Tips:
+                    • Include 2 servings of vegetables in every meal
+                    • Choose whole grains over refined carbs
+                    • ${userProfile.activityLevel === 'active' ? 'Increase protein intake' : 'Mind portion sizes'}
+                    • Limit processed foods and sugary drinks
+                </div>
+            `;
+        }
+
+        // Update profile handling to collect new fields
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            userProfile = {
+                ...userProfile,
+                age: document.getElementById('age').value,
+                weight: document.getElementById('weight').value,
+                height: document.getElementById('height').value,
+                lifestyle: document.getElementById('lifestyle').value,
+                dietPreference: document.getElementById('diet-preference').value,
+                activityLevel: document.getElementById('activity-level').value
+            };
+            
+            document.getElementById('profile-setup').style.display = 'none';
+            document.getElementById('chat-interface').style.display = 'block';
+            const greeting = `Welcome! I've prepared personalized recommendations based on:
+                <div class="badge">Age: ${userProfile.age}</div>
+                <div class="badge">Weight: ${userProfile.weight}kg</div>
+                <div class="badge">${userProfile.lifestyle}</div>
+                <div class="badge">${userProfile.dietPreference}</div>
+                How can I assist you today?`;
+            addBotMessage(greeting);
+        });
+
+        // Add remaining helper functions from previous version
+    </script>
+</body>
+</html>
